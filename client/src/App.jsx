@@ -145,13 +145,13 @@ class App extends Component {
     }&categories=${category}&location.address=${location}&location.within=${localWithin}&start_date.range_start=${trueStartDate}&token=${
       process.env.TOKEN
     }`;
-    console.log("url", getURL);
+
     const url = fetch(getURL)
       .then(res => {
         return res.json();
       })
       .then(data => {
-        console.log("queryEvents", data.events);
+       
         const results = data.events;
         //filter events with valid decription
         this.setState({ events: results.slice(0) });
@@ -335,7 +335,7 @@ class App extends Component {
       })
       .then(data => {
         if (data) {
-          console.log("message!", data);
+        
           //  this.listUpdater(data);
           this.setState({ messages: data });
         }

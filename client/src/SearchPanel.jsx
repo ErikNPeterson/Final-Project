@@ -75,7 +75,6 @@ class SearchPanel extends Component {
             >
               <option value="">-</option>
               {this.props.categories.map(categoryOption => {
-                console.log("category", categoryOption);
                 return (
                   <option value={categoryOption.id} key={categoryOption.id}>
                     {categoryOption.name}

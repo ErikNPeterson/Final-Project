@@ -15,7 +15,7 @@ const _clickHandler = e => {
 
 const _clickHandler2 = e => {
   $(e.target.parentElement.parentElement).toggleClass("flip-action");
-  console.log("click", e.target.parentElement.parentElement.parentElement);
+ 
 };
 
 const Event = ({
