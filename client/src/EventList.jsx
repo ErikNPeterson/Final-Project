@@ -30,4 +30,14 @@ const EventList = ({
   );
 };
 
+EventList.propTypes = {
+  events: React.PropTypes.array,
+  openChat: React.PropTypes.func,
+  handleIconClick: React.PropTypes.func,
+  listItems: React.PropTypes.array,
+  listItemSelected: React.PropTypes.bool,
+  handleXIconOnEventClick: React.PropTypes.func,
+  allEvents: React.PropTypes.array,
+};
+
 export default EventList;

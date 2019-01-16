@@ -26,7 +26,6 @@ class UserLogin extends Component {
         return res.json();
       })
       .then(data => {
-        console.log("user_login data from backend", data);
         if (data.status == 500) {
           $(".error-log").text("email or password is incorrect");
           setTimeout(function () {
@@ -96,5 +95,10 @@ class UserLogin extends Component {
     );
   }
 }
+
+UserLogin.propTypes = {
+  setUser: React.PropTypes.func,
+  getUserEventListInDB: React.PropTypes.func
+};
 
 export default UserLogin;

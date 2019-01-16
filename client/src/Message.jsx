@@ -50,4 +50,9 @@ const Message = ({ message, user_id }) => {
   );
 }
 
+Message.propTypes = {
+  Message: React.PropTypes.array,
+  user_id: React.PropTypes.number,
+};
+
 export default Message;

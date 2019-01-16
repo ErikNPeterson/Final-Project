@@ -244,11 +244,7 @@ class App extends Component {
         })
       }
     )
-      .then(res => {
-        if (res.status === 200) {
-          return res.json();
-        }
-      })
+      .then(res => res.status === 200 ? res.json() : null)
       .then(data => {
         if (data) {
           this.setState({ listItems: data });

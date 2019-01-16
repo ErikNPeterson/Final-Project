@@ -17,7 +17,7 @@ class SearchPanel extends Component {
   _searchEvent = (keyword, category, location, localWithin, startDate) => {
 
 
-    this.props.setListItemSelected({ listItem: false });
+    // this.props.setListItemSelected({ listItem: false });
     this.props.closeChat();
     let trueStartDate = "";
 
@@ -141,5 +141,14 @@ class SearchPanel extends Component {
     );
   }
 }
+
+SearchPanel.propTypes = {
+  categories: React.PropTypes.array,
+  setEvents: React.PropTypes.func,
+  setEventsTmp: React.PropTypes.func,
+  setListItemSelected: React.PropTypes.func,
+  closeChat: React.PropTypes.func,
+  orderby: React.PropTypes.string,
+};
 
 export default SearchPanel;

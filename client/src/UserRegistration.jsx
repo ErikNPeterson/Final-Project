@@ -28,7 +28,6 @@ class UserRegistration extends Component {
         return res.json();
       })
       .then(data => {
-        console.log("user data from backend", data);
         if (data.status == "User cannot be created") {
           $(".error-log-registration").text(data.message);
           setTimeout(function () {
@@ -114,5 +113,9 @@ class UserRegistration extends Component {
     );
   }
 }
+
+UserRegistration.propTypes = {
+  setUser: React.PropTypes.func,
+};
 
 export default UserRegistration;

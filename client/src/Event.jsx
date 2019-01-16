@@ -5,12 +5,10 @@ const _clickHandler = e => {
   $(e.target.parentElement.parentElement.parentElement).toggleClass(
     "flip-action"
   );
-  console.log("clicked");
 };
 
 const _clickHandler2 = e => {
   $(e.target.parentElement.parentElement).toggleClass("flip-action");
-  console.log("click", e.target.parentElement.parentElement.parentElement);
 };
 
 const Event = ({
@@ -190,7 +188,6 @@ const Event = ({
             target="_blank"
             className="btn btn-primary btn-block mt-4 more-button"
           >
-            {" "}
             More
           </a>
 
@@ -204,6 +201,16 @@ const Event = ({
       </div>
     </div>
   );
+};
+
+Event.propTypes = {
+  event: React.PropTypes.object,
+  openChat: React.PropTypes.func,
+  handleIconClick: React.PropTypes.func,
+  listItems: React.PropTypes.array,
+  listItemSelected: React.PropTypes.bool,
+  handleXIconOnEventClick: React.PropTypes.func,
+  allEvents: React.PropTypes.array,
 };
 
 export default Event;

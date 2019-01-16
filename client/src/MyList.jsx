@@ -27,4 +27,9 @@ const MyList = ({ listItems, handleListItemClick }) => {
   );
 };
 
+MyList.propTypes = {
+  listItems: React.PropTypes.array,
+  handleListItemClick: React.PropTypes.func,
+};
+
 export default MyList;

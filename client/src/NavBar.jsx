@@ -1,7 +1,16 @@
 import React from "react";
 import SearchPanel from "./SearchPanel.jsx";
 
-const NavBar = ({ user, categories, resetState, setEvents, setEventsTmp, setListItemSelected, closeChat, orderby }) => {
+const NavBar = ({
+  user,
+  categories,
+  resetState,
+  setEvents,
+  setEventsTmp,
+  setListItemSelected,
+  closeChat,
+  orderby
+}) => {
 
   let generateUserColor = user_id => {
     let hue = (user_id * 70) % 360;
@@ -98,6 +107,16 @@ const NavBar = ({ user, categories, resetState, setEvents, setEventsTmp, setList
     </nav>
 
   );
+};
+
+NavBar.propTypes = {
+  categories: React.PropTypes.array,
+  resetState: React.PropTypes.func,
+  setEvents: React.PropTypes.func,
+  setEventsTmp: React.PropTypes.func,
+  setListItemSelected: React.PropTypes.func,
+  closeChat: React.PropTypes.func,
+  orderby: React.PropTypes.string,
 };
 
 export default NavBar;
