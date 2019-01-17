@@ -12,20 +12,6 @@ class UserLogin extends Component {
     };
   }
 
-  _list = id => {
-    fetch(`http://localhost:8080/users/${id}/events`)
-      .then(res => {
-        return res.json();
-      })
-      .then(data => {
-        if (data) {
-          this.props.setList({
-            listItems: data
-          });
-        }
-      });
-  };
-
   _handleSubmit = e => {
     const { email, password } = this.state;
     const user = fetch("http://localhost:8080/login", {
@@ -40,10 +26,9 @@ class UserLogin extends Component {
         return res.json();
       })
       .then(data => {
-        console.log("user_login data from backend", data);
         if (data.status == 500) {
           $(".error-log").text("email or password is incorrect");
-          setTimeout(function() {
+          setTimeout(function () {
             $(".error-log").text("");
           }, 3000);
           return;
@@ -53,7 +38,7 @@ class UserLogin extends Component {
           username: data.object.username,
           userID: data.object.id
         });
-        this._list(this.props.userState.userID);
+        this.props.getUserEventListInDB(this.props.userState.userID);
         bake_cookie("userCookie", this.props.userState);
         document.querySelector(".login-wrapper").style.display = "none";
         $("body").removeClass("stop-scrolling");
@@ -74,7 +59,7 @@ class UserLogin extends Component {
         >
           +
         </div>
-        <h2 for="user-email">Email</h2>
+        <h2 htmlFor="user-email">Email</h2>
         <input
           type="email"
           // id="login-rmail"
@@ -88,6 +73,7 @@ class UserLogin extends Component {
         />
         <h2>Password</h2>
         <PasswordMask
+          id="password-login"
           type="text"
           onChange={e => {
             this.setState({
@@ -109,5 +95,10 @@ class UserLogin extends Component {
     );
   }
 }
+
+UserLogin.propTypes = {
+  setUser: React.PropTypes.func,
+  getUserEventListInDB: React.PropTypes.func
+};
 
 export default UserLogin;

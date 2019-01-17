@@ -1,17 +1,14 @@
 import React from "react";
 import * as ReactBootstrap from "react-bootstrap";
-// import { Button, Icon } from "react-materialize";
 
 const _clickHandler = e => {
   $(e.target.parentElement.parentElement.parentElement).toggleClass(
     "flip-action"
   );
-  console.log("clicked");
 };
 
 const _clickHandler2 = e => {
   $(e.target.parentElement.parentElement).toggleClass("flip-action");
-  console.log("click", e.target.parentElement.parentElement.parentElement);
 };
 
 const Event = ({
@@ -52,25 +49,26 @@ const Event = ({
 
   let likeIcon = "false";
   let bookmarkIcon = "false";
-  let likeclassName = "far fa-heart icon";
-  let bookmarkclassName = "fas fa-plus-circle icon";
+  let likeClassName = "far fa-heart icon";
+  let bookmarkClassName = "fas fa-plus-circle icon";
   let likeCount = 0;
 
-  allEvents.forEach(item => {
+  for (let item of allEvents) {
     if (event.id === item.external_event_id) {
       likeCount = item.like_count;
+      break;
     }
-  });
+  }
 
   listItems.forEach(item => {
     if (event.id === item.event.external_event_id) {
       likeIcon = item.liked;
       bookmarkIcon = item.bookmarked;
       if (likeIcon === true) {
-        likeclassName = "fas fa-heart icon";
+        likeClassName = "fas fa-heart icon";
       }
       if (bookmarkIcon === true) {
-        bookmarkclassName = "fas fa-plus-circle icon red-plus";
+        bookmarkClassName = "fas fa-plus-circle icon red-plus";
       }
     }
   });
@@ -85,16 +83,9 @@ const Event = ({
   }
 
   let errorMessage = `iconSideError ${event.id}`;
-  // let img_style;
-
-  // if (event.logo.url != null) {
-  //   img_style = { backgroundImage: `url(${event.logo.url})` };
-  //   console.log("iii", img_style);
-  // }
 
   let chatButtonText = !listItemSelected ? "Chat" : "Close";
   return (
-    // <div className="event-card col-4">
     <div
       className="card m-5 flip-card"
       style={{ width: "40rem", height: "32rem" }}
@@ -102,8 +93,7 @@ const Event = ({
       <div className="flip-card-inner hoverable">
         <div className="flip-card-front">
           <div
-            className="card-img-top"
-            className="event-card-body pb-10"
+            className="card-img-top event-card-body pb-10"
             style={{ overflow: "hidden" }}
             alt="Card image cap"
             onClick={_clickHandler}
@@ -123,8 +113,8 @@ const Event = ({
                 {!event.name.text
                   ? ""
                   : event.name.text.substring(40)
-                  ? event.name.text.substring(0, 40) + " ..."
-                  : event.name.text}
+                    ? event.name.text.substring(0, 40) + " ..."
+                    : event.name.text}
               </h2>
               <h3 className="card-text text-left">{properDate}</h3>
               <h3 className="card-text text-left">
@@ -147,7 +137,7 @@ const Event = ({
                 data-name="like"
                 data-event-name={event.name.text}
                 data-img-url={img_url}
-                className={likeclassName}
+                className={likeClassName}
                 onClick={handleIconClick}
               />
               <span className="like-counter">{likeCount}</span>
@@ -158,10 +148,9 @@ const Event = ({
                 data-name="bookmark"
                 data-event-name={event.name.text}
                 data-img-url={img_url}
-                className={bookmarkclassName}
+                className={bookmarkClassName}
                 onClick={handleIconClick}
               />
-              {/* <i className="fas fa-plus-circle icon whiteBookmark " /> */}
             </div>
             <div className={errorMessage} />
             <button
@@ -177,16 +166,7 @@ const Event = ({
             </button>
           </div>
         </div>
-        <div
-          className="flip-card-back"
-          // style={{
-          //   background: `url(${img_url})`,
-          //   backgroundSize: "cover",
-          //   backgroundRepeat: "no-repeat",
-          //   backgroundColor: "rgba(245, 245, 245, 0.6)",
-          //   backgroundBlendMode: "screen"
-          // }}
-        >
+        <div className="flip-card-back">
           <div
             className="card-img-top"
             className="event-card-body"
@@ -200,15 +180,14 @@ const Event = ({
             {!event.description.text
               ? ""
               : event.description.text.substring(290)
-              ? event.description.text.substring(0, 290) + "..."
-              : event.description.text}
+                ? event.description.text.substring(0, 290) + "..."
+                : event.description.text}
           </p>
           <a
             href={event.url}
             target="_blank"
             className="btn btn-primary btn-block mt-4 more-button"
           >
-            {" "}
             More
           </a>
 
@@ -221,8 +200,17 @@ const Event = ({
         </div>
       </div>
     </div>
-    // </div>
   );
+};
+
+Event.propTypes = {
+  event: React.PropTypes.object,
+  openChat: React.PropTypes.func,
+  handleIconClick: React.PropTypes.func,
+  listItems: React.PropTypes.array,
+  listItemSelected: React.PropTypes.bool,
+  handleXIconOnEventClick: React.PropTypes.func,
+  allEvents: React.PropTypes.array,
 };
 
 export default Event;

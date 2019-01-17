@@ -1,8 +1,5 @@
 import React, { Component } from "react";
 
-// This is an Search window
-// TODO: add styling
-
 class SearchPanel extends Component {
   constructor(props) {
     super(props);
@@ -12,24 +9,43 @@ class SearchPanel extends Component {
       location: "toronto",
       localWithin: "",
       startDate: ""
-      // `${this.props.categories}`
     };
 
     this._handleSubmit = this._handleSubmit.bind(this);
   }
 
+  _searchEvent = (keyword, category, location, localWithin, startDate) => {
+
+
+    // this.props.setListItemSelected({ listItem: false });
+    this.props.closeChat();
+    let trueStartDate = "";
+
+    startDate ? trueStartDate = startDate + "T00%3A00%3A00" : null;
+
+    fetch(`https://www.eventbriteapi.com/v3/events/search/?q=${keyword}&expand=organizer,venue&sort_by=${
+      this.props.orderby
+      }&categories=${category}&location.address=${location}&location.within=${localWithin}&start_date.range_start=${trueStartDate}&token=${
+      process.env.TOKEN
+      }`)
+      .then(res => res.json())
+      .then(events => {
+        let data = events.events.filter(event => event.description.text);
+        this.props.setEvents({ events: data });
+        this.props.setEventsTmp({ eventsTmp: data });
+      });
+  }
+
   _handleSubmit(e) {
     e.preventDefault();
     const { keyword, category, location, localWithin, startDate } = this.state;
-    this.props.searchEvent(keyword, category, location, localWithin, startDate);
-    //call this.props.searchEvent(e)
+    this._searchEvent(keyword, category, location, localWithin, startDate);
   }
 
   render() {
     return (
       <div className="searchPanel">
         <form>
-          {/* <div className="inner-form"> */}
           <div className="form-wrap">
             <label>Keyword</label>
             <input
@@ -43,11 +59,12 @@ class SearchPanel extends Component {
               }}
               value={this.state.keyword}
               placeholder="ex.festival"
-              // placeholder="all the fantastic starts from here"
             />
           </div>
           <div className="form-wrap">
-            <label>Start Date</label>
+            <label>
+              Start<span id="txt-date"> Date</span>
+            </label>
             <input
               type="text"
               id="start-date"
@@ -73,7 +90,6 @@ class SearchPanel extends Component {
             >
               <option value="">-</option>
               {this.props.categories.map(categoryOption => {
-                console.log("category", categoryOption);
                 return (
                   <option value={categoryOption.id} key={categoryOption.id}>
                     {categoryOption.name}
@@ -121,11 +137,18 @@ class SearchPanel extends Component {
             </button>
           </div>
         </form>
-
-        {/* <div id="result" className="row mt-5" /> */}
       </div>
     );
   }
 }
+
+SearchPanel.propTypes = {
+  categories: React.PropTypes.array,
+  setEvents: React.PropTypes.func,
+  setEventsTmp: React.PropTypes.func,
+  setListItemSelected: React.PropTypes.func,
+  closeChat: React.PropTypes.func,
+  orderby: React.PropTypes.string,
+};
 
 export default SearchPanel;

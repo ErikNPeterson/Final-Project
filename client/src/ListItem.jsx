@@ -7,8 +7,29 @@ const ListItem = ({ listItem, handleListItemClick }) => {
     likeClass = "fas fa-heart";
   }
 
+  let img;
+
+  if (listItem.event.logo_url) {
+    img = <img
+      className="img-fluid"
+      src={listItem.event.logo_url}
+      data-id={eventId}
+      onClick={handleListItemClick}
+      alt="no image"
+    />
+  } else {
+    img = <img
+      className="img-fluid"
+      style={{ width: "300px", height: "100%", minHeight: "5rem", backgroundColor: "#ddd" }}
+      src={listItem.event.logo_url}
+      data-id={eventId}
+      onClick={handleListItemClick}
+
+    />
+  }
+
   return (
-    //horizontal layout
+
     <div
       className="listItem img-thumbnail"
       data-id={eventId}
@@ -16,12 +37,7 @@ const ListItem = ({ listItem, handleListItemClick }) => {
     >
       <div className="row">
         <div className="col-md-5 list-img">
-          <img
-            className="img-fluid "
-            src={listItem.event.logo_url}
-            data-id={eventId}
-            onClick={handleListItemClick}
-          />
+          {img}
         </div>
         <div className="col-md-7 list-txt">
           <div
@@ -32,14 +48,19 @@ const ListItem = ({ listItem, handleListItemClick }) => {
             {!listItem.event.name
               ? ""
               : listItem.event.name.substring(25)
-              ? listItem.event.name.substring(0, 25) + "..."
-              : listItem.event.name}
+                ? listItem.event.name.substring(0, 25) + "..."
+                : listItem.event.name}
           </div>
           <i className={likeClass} />
         </div>
       </div>
     </div>
   );
+};
+
+ListItem.propTypes = {
+  listItem: React.PropTypes.object,
+  handleListItemClick: React.PropTypes.func,
 };
 
 export default ListItem;

@@ -1,9 +1,7 @@
 import Cable from "actioncable";
 import React, { Component } from "react";
-import SearchPanel from "./SearchPanel.jsx";
 import EventList from "./EventList.jsx";
 import Message from "./Message.jsx";
-// import MessageList from "./MessageList.jsx";
 import UserRegistration from "./UserRegistration.jsx";
 import UserLogin from "./UserLogin.jsx";
 import { read_cookie, delete_cookie } from "sfcookies";
@@ -11,62 +9,111 @@ import MyList from "./MyList.jsx";
 import Scroll from "./Scroll.jsx";
 import ReactDOM from "react-dom";
 import * as ReactBootstrap from "react-bootstrap";
+import NavBar from "./NavBar.jsx";
 
-// import { Button, Icon } from "react-materialize";
-
-//TODO: styling
-//TODO: need sanitize for user input
 class App extends Component {
   constructor(props) {
     super(props);
-    //add an option of oderby distance
     this.state = {
       orderby: "date",
+      categories: [],
+      eventId: "0",
       events: [],
       eventsTmp: [],
-      conditions: [], //maybe no need
-      messages: [], //will be array of object
+      allEvents: [],
+      listItems: [],
+      listItemSelected: false,
+      messages: [],
+      currentChatMessage: "",
       cookie: [],
-      categories: [],
+      user: {
+        status: false,
+        username: null,
+        userID: 0
+      }
+    };
+  }
+
+  ///////// life cycle /////////
+  componentWillMount() {
+    this.state.user = read_cookie("userCookie");
+    this.createSocket();
+    this.getAllEventInDB();
+
+    // retrieve user_event data for mylist
+    if (this.state.user.status) {
+      this.getUserEventListInDB(this.state.user.userID);
+    }
+
+    //retrieve initial events before first render(default events)
+    fetch(
+      `https://www.eventbriteapi.com/v3/events/search/?q=&sort_by=date&location.address=toronto&expand=organizer,venue&token=${
+      process.env.TOKEN
+      }`
+    )
+      .then(res => res.json())
+      .then(events => {
+        let data = events.events.filter(event => event.description.text);
+        this.setState({ events: data });
+        this.setState({ eventsTmp: data });
+      });
+
+    // Query the API for category list
+    fetch(
+      `https://www.eventbriteapi.com/v3/categories/?token=${process.env.TOKEN}`
+    )
+      .then(res => res.json())
+      .then(data => { this.setState({ categories: data.categories }) });
+  }
+
+  componentDidUpdate() {
+    this.scrollToBottom();
+  }
+
+  //////////////////////////
+
+
+  resetState = () => {
+    delete_cookie("userCookie");
+    this.closeChat();
+    $(".myList").hide();
+    this.setState({
+      events: this.state.eventsTmp,
+      listItems: [],
+      listItemSelected: false,
       currentChatMessage: "",
       eventId: "0",
       user: {
         status: false,
         username: null,
-        userID: 0
-      },
-      listItems: [],
-      listItemSelected: false,
-      allEvents: []
-    };
-    this.searchEvent = this.searchEvent.bind(this);
-    this.openChat = this.openChat.bind(this);
-    this.closeChat = this.closeChat.bind(this);
-    this.handleIconClick = this.handleIconClick.bind(this);
-    this.openMyList = this.openMyList.bind(this);
-    this.handleListItemClick = this.handleListItemClick.bind(this);
-    this.handleXIconOnEventClick = this.handleXIconOnEventClick.bind(this);
+        userID: null
+      }
+    });
   }
 
-  generateUserColor = user_id => {
-    let hue = (user_id * 70) % 360;
-    return `hsl(${hue}, 90%, 50%)`;
-  };
-
+  // get all event for like count
   getAllEventInDB = () => {
     fetch(`http://localhost:8080/events`)
-      .then(res => {
-        return res.json();
-      })
-      .then(data => {
-        if (data) {
-          this.setState({
-            allEvents: data
-          });
-        }
-      });
+      .then(res => res.json())
+      .then(data => data ? this.setState({ allEvents: data }) : null);
   };
 
+  // get messages that belong to an event requested
+  getMessagesOfAnEventInDB = (event_id) => {
+    fetch(`http://localhost:8080/events/${event_id}/messages`)
+      .then(res => res.json())
+      .then(data => data ? this.setState({ messages: data }) : null);
+
+  }
+
+  // get my-list info
+  getUserEventListInDB = (user_id) => {
+    fetch(`http://localhost:8080/users/${user_id}/events`)
+      .then(res => res.json())
+      .then(data => data ? this.setState({ listItems: data }) : null);
+  }
+
+  // scroll to the last chat message
   scrollToBottom = () => {
     let messageList = document.getElementById("messageList");
     const scrollHeight = messageList.scrollHeight;
@@ -76,88 +123,6 @@ class App extends Component {
       maxScrollTop > 0 ? maxScrollTop : 0;
   };
 
-  componentWillMount() {
-    this.state.user = read_cookie("userCookie");
-    this.createSocket();
-    this.getAllEventInDB();
-    //retrieve initial events before first render(default events)
-    this.state.user = read_cookie("userCookie");
-
-    if (this.state.user.status) {
-      console.log("retrieve user list");
-      // retrieve user_event data
-      fetch(`http://localhost:8080/users/${this.state.user.userID}/events`)
-        .then(res => {
-          return res.json();
-        })
-        .then(data => {
-          if (data) {
-            this.setState({ listItems: data });
-          }
-        });
-    }
-    const url = fetch(
-      `https://www.eventbriteapi.com/v3/events/search/?q=&sort_by=date&location.address=toronto&expand=organizer,venue&token=${
-        process.env.TOKEN
-      }`
-    )
-      .then(res => {
-        return res.json();
-      })
-      .then(events => {
-        let data = events.events.filter(event => {
-          if (event.description.text) return true;
-        });
-        this.setState({ events: data.slice(0) });
-        this.setState({ eventsTmp: data.slice(0) });
-      });
-
-    // Query the API for category list
-    const categoriesResponse = fetch(
-      `https://www.eventbriteapi.com/v3/categories/?token=${process.env.TOKEN}`
-    )
-      .then(res => {
-        return res.json();
-      })
-      .then(data => {
-        const option = data.categories;
-        this.setState({ categories: option });
-      });
-  }
-
-  componentDidMount() {}
-
-  componentDidUpdate() {
-    this.scrollToBottom();
-  }
-
-  searchEvent(keyword, category, location, localWithin, startDate) {
-    this.setState({ listItemSelected: false });
-    this.closeChat();
-    let trueStartDate = "";
-    let trueDndDate = "";
-    if (startDate) {
-      trueStartDate = startDate + "T00%3A00%3A00";
-    }
-
-    const getURL = `https://www.eventbriteapi.com/v3/events/search/?q=${keyword}&expand=organizer,venue&sort_by=${
-      this.state.orderby
-    }&categories=${category}&location.address=${location}&location.within=${localWithin}&start_date.range_start=${trueStartDate}&token=${
-      process.env.TOKEN
-    }`;
-    console.log("url", getURL);
-    const url = fetch(getURL)
-      .then(res => {
-        return res.json();
-      })
-      .then(data => {
-        console.log("queryEvents", data.events);
-        const results = data.events;
-        //filter events with valid decription
-        this.setState({ events: results.slice(0) });
-      });
-  }
-
   // socket
   createSocket() {
     let cable = Cable.createConsumer("ws://localhost:8080/cable");
@@ -166,26 +131,18 @@ class App extends Component {
         channel: "ChatChannel"
       },
       {
-        connected: () => {},
+        connected: () => { },
         received: data => {
-          // if you don't connect with back-end =========
-          // // this.setState({ messages: [...this.state.messages, data ] });
-          // console.log(this.state.messages);
-          // // concat to message list
-          //===============================================
 
-          // retrieve updated message list from db TODO: it's repeated. need refactor
-          fetch(`http://localhost:8080/events/${this.state.eventId}/messages`)
-            .then(res => {
-              return res.json();
-            })
-            .then(data => {
-              if (data) {
-                this.setState({ messages: data });
-              }
-            });
+          this.getMessagesOfAnEventInDB(this.state.eventId);
+
+          // // ============= if you don't use back-end ==============
+          // //concat to message list
+          // this.setState({ messages: [...this.state.messages, data ] });
+          // //=======================================================
+
         },
-        create: function(chatContent, user_id, event_id, event_name, img_url) {
+        create: function (chatContent, user_id, event_id, event_name, img_url) {
           this.perform("create", {
             content: chatContent,
             user_id: user_id,
@@ -235,20 +192,24 @@ class App extends Component {
     }
   }
 
-  handleIconClick(event) {
+  handleIconClick = (event) => {
+
+    let selectedEventId = event.target.getAttribute("data-id");
     let selectedIcon = event.target.getAttribute("data-name");
     let tmp = selectedIcon;
+
+    //just for rename
     if (selectedIcon === "bookmark") {
       tmp = "add list";
     }
-    let selectedEventId = event.target.getAttribute("data-id");
-    // user was not logged_in
+
+    // if user not logged_in, show error message
     if (!this.state.user.userID) {
-      // request log-in
+
       $(`.${selectedEventId}`).text(
         `You need log-in or register to use ${tmp} function`
       );
-      setTimeout(function() {
+      setTimeout(function () {
         $(`.${selectedEventId}`).text("");
       }, 3000);
 
@@ -262,9 +223,10 @@ class App extends Component {
     let bookmarked = false;
     selectedIcon === "like" ? (liked = true) : (bookmarked = true);
 
+    // handle create, edit, destroy of user_event in back-end
     fetch(
       `http://localhost:8080/users/${
-        this.state.user.userID
+      this.state.user.userID
       }/user_events/${selectedEventId}`,
       {
         headers: {
@@ -282,11 +244,7 @@ class App extends Component {
         })
       }
     )
-      .then(res => {
-        if (res.status === 200) {
-          return res.json();
-        }
-      })
+      .then(res => res.status === 200 ? res.json() : null)
       .then(data => {
         if (data) {
           this.setState({ listItems: data });
@@ -295,77 +253,26 @@ class App extends Component {
       });
   }
 
-  handleListItemClick(event) {
+  handleListItemClick = (event) => {
     let selectedEventId = event.target.getAttribute("data-id");
-    // move current search result in tmp
-    if (this.state.listItemSelected === false) {
-      this.setState({ eventsTmp: this.state.events });
-    }
+
     this.setState({ listItemSelected: true });
     this.setState({ eventId: selectedEventId });
-    // $(".myList").slideUp() &&
-    //   $(".btn-mylist").removeClass("mylist-on") &&
-    //   $(".btn-mylist").text("MyList");
 
-    console.log("retrieve user list");
-    // retrieve user_event data
-    fetch(`http://localhost:8080/users/${this.state.user.userID}/events`)
-      .then(res => {
-        return res.json();
-      })
-      .then(data => {
-        if (data) {
-          this.setState({ listItems: data });
-        }
-      });
-
+    // retrieve one event from api
     fetch(
       `https://www.eventbriteapi.com/v3/events/${selectedEventId}/?token=${
-        process.env.TOKEN
+      process.env.TOKEN
       }&expand=organizer,venue`
     )
-      .then(res => {
-        return res.json();
-      })
-      .then(data => {
-        this.setState({ events: [data] });
-      });
+      .then(res => res.json())
+      .then(data => this.setState({ events: [data] }));
 
     // retrieve messages that belong to an event requested
-    fetch(`http://localhost:8080/events/${selectedEventId}/messages`)
-      .then(res => {
-        return res.json();
-      })
-      .then(data => {
-        if (data) {
-          console.log("message!", data);
-          //  this.listUpdater(data);
-          this.setState({ messages: data });
-        }
-      });
+    this.getMessagesOfAnEventInDB(selectedEventId);
 
     this.scrollToBottom();
     this.openChatFromList();
-  }
-
-  // when x Icon on an event from myList was clicked
-  handleXIconOnEventClick(event) {
-    this.closeChat();
-    this.setState({ listItemSelected: false });
-    this.setState({ events: this.state.eventsTmp });
-  }
-
-  // Open user's MyList
-  openMyList(event) {
-    $(".myList").is(":visible")
-      ? // close list
-        $(".myList").slideUp() &&
-        $(".btn-mylist").removeClass("mylist-on") &&
-        $(".btn-mylist").text("MyList")
-      : // open list
-        $(".myList").slideDown() &&
-        $(".btn-mylist").addClass("mylist-on") &&
-        $(".btn-mylist").text("Close");
   }
 
   openChatFromList = () => {
@@ -376,54 +283,46 @@ class App extends Component {
   };
 
   // Open Chat space from search
-  openChat(event) {
+  openChat = (event) => {
     let eventId = event.target.name;
+    let eventName = event.target.getAttribute("data-event-name");
+    let imgUrl = event.target.getAttribute("data-img-url");
 
     if (!this.state.user.userID) {
       // request log-in
       $(`.${eventId}`).text("You need log-in or register to use chat function");
-      setTimeout(function() {
+      setTimeout(function () {
         $(".iconSideError").text("");
       }, 3500);
 
       return;
     }
 
-    let eventName = event.target.getAttribute("data-event-name");
-    let imgUrl = event.target.getAttribute("data-img-url");
-
     $(".chatSpace").animate({
       width: "toggle"
     });
 
+    // hide other event cards
     var target = $(
       event.target.parentElement.parentElement.parentElement.parentElement
     );
-
     target.siblings().toggle();
 
-    var check = target.next();
-
     // When a chat space was not open
+    var check = target.next();
     if (!$(check).is(":visible")) {
       $(event.target).css("background-color", "#ff9933");
       $(event.target).text("Close");
 
       // retrieve messages that belong to an event requested
-      fetch(`http://localhost:8080/events/${event.target.name}/messages`)
-        .then(res => {
-          return res.json();
-        })
-        .then(data => {
-          if (data) {
-            this.setState({
-              eventId: eventId,
-              event_name: eventName,
-              img_url: imgUrl,
-              messages: data
-            });
-          }
-        });
+      this.getMessagesOfAnEventInDB(event.target.name);
+
+      this.setState({
+        eventId: eventId,
+        event_name: eventName,
+        img_url: imgUrl,
+      });
+
       return;
     }
 
@@ -433,8 +332,8 @@ class App extends Component {
   }
 
   //close chat space
-  closeChat(e) {
-    //close chat space
+  closeChat = () => {
+
     if ($(".chatSpace").is(":visible")) {
       $(".chatSpace").animate({
         width: "toggle"
@@ -447,6 +346,13 @@ class App extends Component {
     this.setState({ events: this.state.eventsTmp });
   }
 
+  // when x Icon on an event from myList was clicked
+  handleXIconOnEventClick = (event) => {
+    this.closeChat();
+    this.setState({ listItemSelected: false });
+    this.setState({ events: this.state.eventsTmp });
+  }
+
   render() {
     let messages = this.state.messages.map((message, i) => {
       return (
@@ -454,112 +360,18 @@ class App extends Component {
       );
     });
 
-    ///////////// nav bar before log-in ///////////////
-    let outside = (
-      <div className="nav-right flexR enter">
-        <div
-          onClick={e => {
-            window.scrollTo(0, 0);
-            document.querySelector(".registration-wrapper").style.display =
-              "flex";
-            $("body").addClass("stop-scrolling");
-            console.log("click me");
-          }}
-        >
-          register
-        </div>
-        &nbsp;/&nbsp;
-        <div
-          onClick={e => {
-            //relocate the iniative postion of pop-up window
-            window.scrollTo(0, 0);
-            document.querySelector(".login-wrapper").style.display = "flex";
-            $("body").addClass("stop-scrolling");
-          }}
-        >
-          log-in
-        </div>
-      </div>
-    );
-
-    ///////////// nav bar before log-in ///////////////
-    let inside = (
-      <div className="nav-right flexR">
-        <div
-          className="user_icon_nav"
-          style={{
-            backgroundColor: this.generateUserColor(this.state.user.userID)
-          }}
-          onClick={this.openLogOut}
-        />
-
-        <div className="userName" onClick={this.openLogOut}>
-          {this.state.user.username}
-        </div>
-
-        <div
-          className="log-out"
-          onClick={e => {
-            delete_cookie("userCookie");
-            this.closeChat();
-            $(".myList").hide();
-            this.setState({
-              events: this.state.eventsTmp,
-              user: {
-                status: false,
-                username: null,
-                userID: null
-              },
-              listItems: [],
-              listItemSelected: false,
-              currentChatMessage: "",
-              eventId: "0"
-            });
-          }}
-        >
-          log-out
-        </div>
-
-        {/* <div className="logOutPopUp">
-        log-out
-      </div> */}
-
-        <button
-          className="btn-mylist"
-          style={{ visibility: this.state.user.status ? "block" : "hidden" }}
-          onClick={this.openMyList}
-        >
-          Mylist
-        </button>
-      </div>
-    );
-
-    ////////////////////////////////////
-
-    // cache the element you intend to target
-    // const navBar = document.querySelector('.navbar');
-
-    // // cache styles of sidebarElement inside cssStyles
-    // const cssStyles = getComputedStyle(navBar);
-
-    // // retrieve the value of the --left-pos CSS variable
-    // const cssVal = String(cssStyles.getPropertyValue('height')).trim();
-
-    ///////////// return ///////////////
     return (
       <div>
-        <nav className="navbar">
-          <div className="navbar-content flexR">
-            <a className="title">relEVENT</a>
-            {/* {cssVal} */}
-
-            {this.state.user.status ? inside : outside}
-          </div>
-          <SearchPanel
-            searchEvent={this.searchEvent}
-            categories={this.state.categories}
-          />
-        </nav>
+        <NavBar
+          user={this.state.user}
+          categories={this.state.categories}
+          resetState={this.resetState}
+          setEvents={events => this.setState(events)}
+          setEventsTmp={eventsTmp => this.setState(eventsTmp)}
+          setListItemSelected={listItemSelected => this.setState(listItemSelected)}
+          closeChat={this.closeChat}
+          orderby={this.state.orderby}
+        />
 
         <main>
           <div className="registration-wrapper">
@@ -572,8 +384,8 @@ class App extends Component {
           <div className="login-wrapper">
             <UserLogin
               setUser={user => this.setState({ user })}
-              setList={listItems => this.setState(listItems)}
               userState={this.state.user} // render it in the nav
+              getUserEventListInDB={this.getUserEventListInDB}
             />
           </div>
 
@@ -594,15 +406,11 @@ class App extends Component {
             <div className="chatSpace">
               <div className="stage">
                 <Scroll width="100%" height="500px" idName="messageList">
-                  {/* <div id="messageList"> */}
                   <div className="chatHeaderContainer">
                     <div className="chatSpaceHeader">
-                      {/* <h1>Event Chat</h1> */}
                     </div>
                   </div>
-                  {/* <i id="closeX" className="fas fa-times fa-2x" onClick={this.closeChat}></i> */}
                   <div className="chat-logs">{messages}</div>
-                  {/* </div> */}
                 </Scroll>
 
                 <div className="inputContainer">
@@ -618,7 +426,6 @@ class App extends Component {
                     onClick={e => this.handleSendEvent(e)}
                     className="send"
                   >
-                    {" "}
                     Send
                     <img
                       src="./images/send-message.png"
@@ -626,10 +433,6 @@ class App extends Component {
                     />
                   </button>
                 </div>
-
-                {/* <div className="closeX" onClick={this.closeChat}>
-                  close chat
-                </div> */}
               </div>
             </div>
           </div>
