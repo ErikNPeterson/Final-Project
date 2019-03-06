@@ -10,10 +10,6 @@ Built with React.js and Ruby on Rails, relEVENT is an event aggregator app that 
 
 Through the following instructions you will `install dependencies`, `obtain API key`, `create and seed the database`, and `run the front-end and back-end servers`.
 
---- initial set up ---
-
-*This project consists of 2 folders, server and client.*
-
 1. Clone this repo to your local drive.
 
 2. Obtain an `eventbrite API key` @(https://www.eventbrite.com/platform/api-keys/)
@@ -33,14 +29,15 @@ $ bin/rake db:seed or $bin/rake db:reset (refresh data)
 
 6. In the `client` folder run the `npm install` command.
 
----------------------
-
 7. In the server folder run the `rails s` command. This will run the server at `http://localhost:8080`
 
 8. In the client folder run the `npm start` command. This will run the application at `http://localhost:3000`
 
 9. Open a web browser and go to `http://localhost:3000` to see relEVENT page.
 
+10. Enjoy relEVENT! 
+
+---------------------
 
 ### Dependencies
 
