@@ -6,26 +6,24 @@ Built with React.js and Ruby on Rails, relEVENT is an event aggregator app that 
 - *NOTE: please give it a minute to load*
 - https://relevent-client.herokuapp.com/
 
-### Getting Started
+## Getting Started
 
-Install the dependencies, create and seed the database and start the front-end and back-end servers in two separate terminal windows.
+Through the following instructions you will `install dependencies`, `obtain API key`, `create and seed the database`, and `run the front-end and back-end servers`.
 
 --- initial set up ---
 
-Clone this repo in your local.
-This project consists of 2 folders, server and client.
+*This project consists of 2 folders, server and client.*
 
-get your own eventbrite API key if you don't have.(https://www.eventbrite.com/platform/api-keys/)
-make an .env file inside of both "server" and "client" folder and set API key  
-ex.TOKEN=YourAPIKey
+1. Clone this repo to your local drive.
 
-In the server folder. Install gem files.
-```
-$bundle 
-```
+2. Obtain an `eventbrite API key` @(https://www.eventbrite.com/platform/api-keys/)
 
-In the server folder.
-To set postgreSQL database.
+3. Create an `.env` file inside of both `server` and `client` folder
+   - set API key inside `.env` ex.`TOKEN=YourAPIKey`
+
+4. In the `server` folder run the `bundle install` command to install `gem` files.
+
+5. In the `server` folder set up the *postgreSQL* database by running the following commands.
 
 ```
 $ createdb api_development
@@ -33,21 +31,15 @@ $ bin/rake db:migrate
 $ bin/rake db:seed or $bin/rake db:reset (refresh data)
 ```
 
-In the client folder. Install npm.
-```
-$npm install
-```
+6. In the `client` folder run the `npm install` command.
+
 ---------------------
 
-In the server folder, from a terminal window, run server. this server will run at http://localhost:8080
-```
-$ rails s 
-```
-In the client folder, from a terminal window,
-```
-$ npm start
-```
-open http://localhost:3000 to see relEVENT page.
+7. In the server folder run the `rails s` command. This will run the server at `http://localhost:8080`
+
+8. In the client folder run the `npm start` command. This will run the application at `http://localhost:3000`
+
+9. Open a web browser and go to `http://localhost:3000` to see relEVENT page.
 
 
 ### Dependencies
