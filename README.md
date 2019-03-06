@@ -17,15 +17,12 @@ Through the following instructions you will `install dependencies`, `obtain API 
 3. Create an `.env` file inside of both `server` and `client` folder
    - set API key inside `.env` ex.`TOKEN=YourAPIKey`
 
-4. In the `server` folder run the `bundle install` command to install `gem` files.
+4. In the `server` folder, run the `bundle install` command to install `gem` files.
 
-5. In the `server` folder set up the *postgreSQL* database by running the following commands.
-
-```
-$ createdb api_development
-$ bin/rake db:migrate
-$ bin/rake db:seed or $bin/rake db:reset (refresh data)
-```
+5. In the `server` folder, run the following commands set up the database.
+     1. `createdb api_development`
+     2. `bin/rake db:migrate`
+     3. `bin/rake db:seed` to seed or `bin/rake db:reset` to reset the database.
 
 6. In the `client` folder run the `npm install` command.
 
