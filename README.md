@@ -6,9 +6,14 @@ Built with React.js and Ruby on Rails, relEVENT is an event aggregator app that 
 
 !["The main page"](./)
 
--The main page will preload 50 general events in the city of Toronto
--User could see the brief info, date, location about an event and flip the event card to see more information, click "more" could lead user to Eventbrite for more
--The Search Bar on the top allows user to input one or multiple criteria(keyword, Start Date, Category, Location and Distance) to refine the result of event and fetch more events!
+- The main page will preload 50 general events in the city of Toronto
+- Visitor could see the brief info, date, location and the "POPULARITY", which is counted based on users' choice, about an event
+- Visitor can flip the event card to see the introducation, and click "more" to navigate the full information on Eventbrite
+- The Search Bar on the top allows user to input one or multiple criteria(keyword, Start Date, Category, Location and Distance) to refine the result of event and fetch more events
+- Vistor could register/log in to explore the full functionalities of the relEVENT
+- Log-in user could like, save and chat about a selected event
+- Log-in user could chat in real-time, share photos/gifs and chekc the chatting history in the chatting save.
+- Log-in user could see his/her preference in the list of saved events and fast navigate to the saved event and its chatting space
 
 ### Getting Started
 
