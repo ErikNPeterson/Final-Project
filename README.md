@@ -2,6 +2,11 @@
 
 Built with React.js and Ruby on Rails, relEVENT is an event aggregator app that helps users find and discuss upcoming events in Toronto. Users can save a list of their favourite events and each event has its own real-time chatroom that multiple users can participate in.
 
+## Check out the App ONLINE
+
+- _NOTE: please give it a minute to load_
+- https://relevent-client.herokuapp.com/
+
 ### What to expect
 
 - The main page will preload 50 general events in the city of Toronto
@@ -20,20 +25,13 @@ Built with React.js and Ruby on Rails, relEVENT is an event aggregator app that 
 
 - Log-in user could "like", "save" and "chat" about a selected event
 
-!["The main page"](./document/login-and-chat.gif)
+- Log-in user could chat in real-time, share photos/gifs and check the chatting history in the chatting save
 
-- Log-in user could chat in real-time, share photos/gifs and chekc the chatting history in the chatting save
+!["The main page"](./document/login-and-chat.gif)
 
 - Log-in user could see his/her preference in the list of saved events and fast navigate to the saved event and its chatting space
 
 !["The main page"](./document/savedlist.gif)
-
-## Check out the App ONLINE
-
-- _NOTE: please give it a minute to load_
-- https://relevent-client.herokuapp.com/
-
----
 
 ## Set up the App on your local drive
 
