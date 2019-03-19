@@ -5,15 +5,23 @@ Built with React.js and Ruby on Rails, relEVENT is an event aggregator app that 
 ### What to expect
 
 !["The main page"](./document/main-page.gif)
-!["The main page"](./document/searching.gif)
-!["The main page"](./document/login-and-chat.gif)
-!["The main page"](./document/savedlist.gif)
 
 - The main page will preload 50 general events in the city of Toronto
+
 - Visitor could see the brief info, date, location and the "POPULARITY", which is counted based on users' choice, about an event
+
 - Visitor can flip the event card to see the introducation, and click "more" to navigate the full information on Eventbrite
+
+!["The main page"](./document/searching.gif)
+
 - The Search Bar on the top allows user to input one or multiple criteria(keyword, Start Date, Category, Location and Distance) to refine the result of event and fetch more events
+
+!["The main page"](./document/login-and-chat.gif)
+
 - Vistor could register/log in to explore the full functionalities of the relEVENT
+
+!["The main page"](./document/savedlist.gif)
+
 - Log-in user could like, save and chat about a selected event
 - Log-in user could chat in real-time, share photos/gifs and chekc the chatting history in the chatting save.
 - Log-in user could see his/her preference in the list of saved events and fast navigate to the saved event and its chatting space
@@ -54,13 +62,13 @@ $npm install
 
 ---
 
-In the server folder, from a terminal window, run server. this server will run at http://localhost:8080
+In the server folder, from a terminal window, run server. This server will run at http://localhost:8080
 
 ```
 $ rails s
 ```
 
-In the client folder, from a terminal window,
+In the client folder, from a terminal window, run client's server. The client server will run at http://localhost:3000
 
 ```
 $ npm start
@@ -71,6 +79,10 @@ open http://localhost:3000 to see relEVENT page.
 ### Dependencies
 
 - React
-- Webpack
 - [babel-loader](https://github.com/babel/babel-loader)
 - [webpack-dev-server](https://github.com/webpack/webpack-dev-server)
+- action-cable-react
+- fscookie
+- sass
+- rails
+- bcrypt
