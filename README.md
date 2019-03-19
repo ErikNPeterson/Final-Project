@@ -5,9 +5,9 @@ Built with React.js and Ruby on Rails, relEVENT is an event aggregator app that 
 ### What to expect
 
 !["The main page"](./document/main-page.gif)
-!["The main page"](./document/login-and-chat.gif)
 !["The main page"](./document/searching.gif)
-!["The main page"](./document/main-page.gif)
+!["The main page"](./document/login-and-chat.gif)
+!["The main page"](./document/savedlist.gif)
 
 - The main page will preload 50 general events in the city of Toronto
 - Visitor could see the brief info, date, location and the "POPULARITY", which is counted based on users' choice, about an event
