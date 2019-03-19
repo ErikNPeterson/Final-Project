@@ -4,27 +4,29 @@ Built with React.js and Ruby on Rails, relEVENT is an event aggregator app that 
 
 ### What to expect
 
-!["The main page"](./document/main-page.gif)
-
 - The main page will preload 50 general events in the city of Toronto
 
-- Visitor could see the brief info, date, location and the "POPULARITY", which is counted based on users' choice, about an event
+- Visitor could see the brief info, date, location and the "POPULARITY", which is counted based on the times users have clicked "like", about an event
 
-- Visitor can flip the event card to see the introducation, and click "more" to navigate the full information on Eventbrite
+- Visitor can flip the event card to see the introducation, and click "more" to navigate the full page on Eventbrite
 
-!["The main page"](./document/searching.gif)
+!["The main page"](./document/main-page.gif)
 
 - The Search Bar on the top allows user to input one or multiple criteria(keyword, Start Date, Category, Location and Distance) to refine the result of event and fetch more events
 
-!["The main page"](./document/login-and-chat.gif)
+!["The main page"](./document/searching.gif)
 
 - Vistor could register/log in to explore the full functionalities of the relEVENT
 
-!["The main page"](./document/savedlist.gif)
+- Log-in user could "like", "save" and "chat" about a selected event
 
-- Log-in user could like, save and chat about a selected event
-- Log-in user could chat in real-time, share photos/gifs and chekc the chatting history in the chatting save.
+!["The main page"](./document/login-and-chat.gif)
+
+- Log-in user could chat in real-time, share photos/gifs and chekc the chatting history in the chatting save
+
 - Log-in user could see his/her preference in the list of saved events and fast navigate to the saved event and its chatting space
+
+!["The main page"](./document/savedlist.gif)
 
 ### Getting Started
 
@@ -86,3 +88,10 @@ open http://localhost:3000 to see relEVENT page.
 - sass
 - rails
 - bcrypt
+
+### Authors
+
+- **Azusa** [azusaaz](https://github.com/azusaaz)
+- **Erik Perterson** [ErikNPeterson](https://github.com/ErikNPeterson)
+- **Eric Zhao** [froliceric0914](https://github.com/froliceric0914)
+- **Ryan Kendrick** [RyanKendrick](https://github.com/RyanKendrick)
