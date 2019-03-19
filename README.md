@@ -30,16 +30,22 @@ Built with React.js and Ruby on Rails, relEVENT is an event aggregator app that 
 
 ### Getting Started
 
-Install the dependencies, create and seed the database and start the front-end and back-end servers in two separate terminal windows.
+---
 
---- initial set up ---
+![image of relEVENT](<https://github.com/ErikNPeterson/relEVENT/blob/master/images/relEVENT_top%20(1).png>)
 
-Clone this repo in your local.
-This project consists of 2 folders, server and client.
+---
 
-get your own eventbrite API key if you don't have.(https://www.eventbrite.com/platform/api-keys/)
-make an .env file inside of both "server" and "client" folder and set API key  
-ex.TOKEN=YourAPIKey
+## Check out the App ONLINE
+
+- _NOTE: please give it a minute to load_
+- https://relevent-client.herokuapp.com/
+
+---
+
+## Set up the App on your local drive
+
+Through the following instructions you will `install dependencies`, `obtain API key`, `create and seed the database`, and `run the front-end and back-end servers`.
 
 In the server folder. Install gem files.
 
@@ -47,15 +53,14 @@ In the server folder. Install gem files.
 $bundle
 ```
 
-In the server folder.
-To set postgreSQL database.
+1. Clone this repo to your local drive.
 
-```
-$ createdb api_development
-$ bin/rake db:migrate
-$ bin/rake db:seed or $bin/rake db:reset (refresh data)
-```
+2. Obtain an `eventbrite API key` @(https://www.eventbrite.com/platform/api-keys/)
 
+3. Create an `.env` file inside of both `server` and `client` folder
+   - set API key inside `.env` ex.`TOKEN=YourAPIKey`
+
+<<<<<<< HEAD
 In the client folder. Install npm.
 
 ```
@@ -76,7 +81,29 @@ In the client folder, from a terminal window, run client's server. The client se
 $ npm start
 ```
 
-open http://localhost:3000 to see relEVENT page.
+# open http://localhost:3000 to see relEVENT page.
+
+4. In the `server` folder, run the `bundle install` command to install `gem` files.
+
+5. In the `server` folder, run the following commands set up the database.
+
+   1. `createdb api_development`
+   2. `bin/rake db:migrate`
+   3. `bin/rake db:seed` to seed or `bin/rake db:reset` to reset the database.
+
+6. In the `client` folder run the `npm install` command.
+
+7. In the server folder run the `rails s` command. This will run the server at `http://localhost:8080`
+
+8. In the client folder run the `npm start` command. This will run the application at `http://localhost:3000`
+
+9. Open a web browser and go to `http://localhost:3000` to see relEVENT page.
+
+10. Enjoy relEVENT!
+
+---
+
+> > > > > > > 10a30db89e02814ca60e7fda3576d467ba285b6c
 
 ### Dependencies
 
